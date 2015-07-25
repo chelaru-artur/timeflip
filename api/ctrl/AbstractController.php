@@ -4,6 +4,12 @@
  *	Abstract Controller class
  */
 abstract class AbstractController {
+	protected $db;
+
+	public function __construct() {
+		$this->db = new Database();
+	}
+
 	public function index() {
 		echo 'test';
 	}
