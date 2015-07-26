@@ -1,0 +1,105 @@
+.demo-card-wide.mdl-card {
+	display:block;
+	width:100%;
+}
+.demo-card-wide > .mdl-card__title {
+	color: #fff;
+	/*height: 176px;*/
+	/*background: url('../img/welcome_card.jpg') center / cover;*/
+	background-color:rgb(63, 81, 181);
+}
+.demo-card-wide > .mdl-card__menu {
+	color: #fff;
+}
+.mdl-textfield {
+	width:100%;
+}
+
+.contain2 {
+	max-width:970px; margin:0px auto; padding:15px;
+}
+.contain3 {}
+.contain {
+	max-width:1000px; margin:0 auto;
+}
+.taskname {
+	padding-top:15px; 
+	font-size:18px;
+}
+body {
+	background-color:#EEE;
+}
+.my_con {
+	background-color:rgb(3, 169, 244);
+	height:200px;
+}
+.my_class2 {
+	position:absolute;
+	top:0; left:0; right:0; bottom:0;
+}
+.footer_con{
+	position:absolute;
+	left:0; right:0; bottom:0;
+}
+.title_con {
+	font-size:300px;
+	text-align:center !important;
+	display:block;
+	width:100%;
+}
+.taskname2 {
+	padding-top:15px;
+	font-size:60px;
+	color:#282828;
+	
+	position:absolute;
+	top:60%; left:0; right:0; 
+}
+.taskname2 span {
+	float:right;
+	color:#ccc;
+	font-size:30px;
+}
+
+
+@media screen and (max-width: 1200px) {
+
+  .title_con {
+	font-size:250px;
+	
+	}
+
+}
+@media screen and (max-width: 1015px) {
+
+  .title_con {
+	font-size:200px;
+	
+	}
+
+}
+@media screen and (max-width: 830px) {
+
+  .title_con {
+	font-size:150px;
+	
+	}
+
+}
+@media screen and (max-width: 635px) {
+
+  .title_con {
+	font-size:70px;
+	
+	}
+
+}
+@media screen and (max-width: 400px) {
+
+  .title_con {
+	font-size:40px;
+	
+	}
+
+}
+
