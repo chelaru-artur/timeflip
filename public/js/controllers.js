@@ -1,46 +1,87 @@
 /**
  * Created by artur on 7/25/2015.
  */
+var appControllers = angular.module('appControllers', ['appServices']);
 
-var appControllers = angular.module('appControllers', []);
+appControllers.controller('MainCtrl', ['$scope', 'apiService', function($scope, apiService) {
+    $scope.duration = 0;
+    $scope.currentTaskList = [];
+    $scope.totalTime = '';
+    $scope.currentTaskIndex = 0;
 
-appControllers.controller('MainCtrl', ['$scope', '$http', function ($scope) {
-    $scope.test = 'test success';
+    // countdown var
     $scope.timerRunning = false;
+    $scope.allTasksDone = false;
     $scope.duration = 0;
     $scope.timeLeft = 0;
     $scope.isTimerPaused = false;
     var isTimerPaused = false;
 
-    $scope.startTimer = function (time) {
-        $scope.$broadcast('timer-start', {seconds: parseInt(time)});
+    apiService.get().success(function(data, status, b) {
+        $scope.currentTaskList = data[0];
+        console.log(data[0]);
+    });
+
+    var calculateTotalTime = function(taskList) {
+        var totalTime = 0;
+        taskList.forEach(function(task) {
+            totalTime += task.duration;
+        });
+        return totalTime;
+    };
+    var nextTask = function() {
+        //console.log($scope.currentTaskIndex);
+        if ($scope.currentTaskIndex < $scope.currentTaskList.length) {
+            $scope.currentTaskIndex += 1;
+            var currentTask = $scope.currentTaskList[$scope.currentTaskIndex];
+            console.log($scope.currentTaskIndex, currentTask);
+            $scope.startTimer(currentTask);            
+        } else {
+            $scope.$broadcast('all-tasks-done');
+        }
+    };
+
+    /////////////////////////////// COUNTDOWN
+
+
+    $scope.startTimer = function() {
+        $scope.allTasksDone = false;
+        $scope.currentTaskIndex = 0; // start from first element
+        $scope.$broadcast('timer-start', $scope.currentTaskList[$scope.currentTaskIndex]);
         $scope.timerRunning = true;
     };
 
-    $scope.pauseTimer = function () {
+    $scope.pauseTimer = function() {
         $scope.$broadcast('timer-pause');
         $scope.timerRunning = false;
         console.log('timer paused');
     };
 
-    $scope.$on('timer-start', function (event, data) {
+    $scope.$on('timer-start', function(event, task) {
+        // console.log(task);
         if ($scope.isTimerPaused == true) {
             console.log('after pause');
             $scope.isTimerPaused = false;
             // with time left to resume
-            window.countdown({seconds : $scope.timeLeft}, function (timeLeft, isFinished) {
-                $scope.timeLeft = timeLeft;
-                console.log(fromSecondsToHumanTime(timeLeft));
+            window.countdown({
+                seconds: task.timeLeft
+            }, function(timeLeft, isFinished) {
+                task.timeLeft = timeLeft;
+                $scope.totalTime -= 1;
                 $scope.$apply();
                 if (isFinished == true) {
-                    $scope.$broadcast('timer-stop');
+                    $scope.$broadcast('timer-done');
                 }
             });
         } else {
-            window.countdown(data, function (timeLeft, isFinished) {
-                $scope.timeLeft = timeLeft;
+            $scope.totalTime = calculateTotalTime($scope.currentTaskList);
+            window.countdown({
+                seconds: task.duration
+            }, function(timeLeft, isFinished) {
+                task.timeLeft = timeLeft;
+                $scope.totalTime -= 1;
                 $scope.$apply();
-                console.log(fromSecondsToHumanTime(timeLeft));
+                // console.log(fromSecondsToHumanTime(timeLeft));
                 if (isFinished == true) {
                     $scope.$broadcast('timer-done');
                 }
@@ -48,15 +89,21 @@ appControllers.controller('MainCtrl', ['$scope', '$http', function ($scope) {
         }
     });
 
-    $scope.$on('timer-pause', function (event, data) {
+    $scope.$on('timer-pause', function(event, data) {
         window.countdown.stop();
         $scope.isTimerPaused = true;
         $scope.timerRunning = false;
         console.log('Timer Paused - data = ', data);
     });
 
-    $scope.$on('timer-done', function (event, data) {
+    $scope.$on('timer-done', function(event, data) {
         $scope.timerRunning = false;
+        nextTask();
+    });
+
+    $scope.$on('all-tasks-done', function(event, data) {
+        $scope.allTasksDone = true;
+        $scope.currentTaskIndex = 0;
     });
 
     function fromSecondsToHumanTime(s) {
@@ -77,5 +124,5 @@ appControllers.controller('MainCtrl', ['$scope', '$http', function ($scope) {
         var time = hours + ':' + minutes + ':' + seconds;
         return time;
     }
-
+    /////////////////////////////////////////////////////////////
 }]);

@@ -32,7 +32,7 @@ class CountdownController extends AbstractController {
 
 			echo json_encode($task_opt);
 		} else {
-			die('Not allowed to see this URL.');
+			 die('Not allowed to see this URL.');
 		}
 	}
 }
