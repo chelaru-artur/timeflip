@@ -7,5 +7,14 @@ angular.module('myApp', [
   'appControllers'
 ]).
 config(['$routeProvider', function($routeProvider) {
-  $routeProvider.otherwise({redirectTo: '/'});
+  $routeProvider
+      .when('/addtasks', {
+        templateUrl : 'partials/tasklist.html',
+        controller : 'MainCtrl'
+      })
+      .when('/tasklist', {
+        templateUrl : 'partials/runtasks.html',
+        controller : 'MainCtrl'
+      })
+      .otherwise({redirectTo: '/addtasks'});
 }]);

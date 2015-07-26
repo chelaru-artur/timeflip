@@ -1,0 +1,9 @@
+<div ng-controller="MainCtrl">
+    <h3>Aloha</h3>
+    Title:<input ng-model="newTaskTitle" type="text">
+    Time : <input ng-model="newTaskDuration" type="number">
+     <button ng-click="addNewTask(newTaskTitle, newTaskDuration)">Add new task</button>
+    <ul>
+        <li ng-repeat="task in currentTaskList"> {{task.title}} : {{fromSecondsToHumanTime(task.duration)}}  <button ng-click="updateTask($index, newTaskTitle, newTaskDuration)">Update</button> <button ng-click="deleteTask($index)">Delete</button> <hr> </li>
+    </ul>
+</div>

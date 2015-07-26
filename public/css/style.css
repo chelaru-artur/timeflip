@@ -48,11 +48,11 @@ body {
 	width:100%;
 }
 .taskname2 {
-	padding-top:15px;
-	font-size:60px;
+	/*padding-top:15px;*/
+	font-size:40px;
 	color:#282828;
-	
-	position:absolute;
+	line-height : 1.2;
+	/*position:absolute;*/
 	top:60%; left:0; right:0; 
 }
 .taskname2 span {
