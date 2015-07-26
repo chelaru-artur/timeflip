@@ -19,7 +19,8 @@ appControllers.controller('MainCtrl', ['$scope', 'apiService', function($scope, 
 
     apiService.get().success(function(data, status, b) {
         $scope.currentTaskList = data[0];
-        console.log(data[0]);
+        $scope.totalTime = calculateTotalTime($scope.currentTaskList);
+        // console.log(data[0]);
     });
 
     var calculateTotalTime = function(taskList) {
@@ -30,12 +31,13 @@ appControllers.controller('MainCtrl', ['$scope', 'apiService', function($scope, 
         return totalTime;
     };
     var nextTask = function() {
-        //console.log($scope.currentTaskIndex);
-        if ($scope.currentTaskIndex < $scope.currentTaskList.length) {
+        if ($scope.currentTaskIndex < $scope.currentTaskList.length - 1) {
             $scope.currentTaskIndex += 1;
             var currentTask = $scope.currentTaskList[$scope.currentTaskIndex];
-            console.log($scope.currentTaskIndex, currentTask);
-            $scope.startTimer(currentTask);            
+            // console.log($scope.currentTaskIndex, currentTask);
+            setTimeout(function(){
+                $scope.startTimer(currentTask);
+            }, 100);            
         } else {
             $scope.$broadcast('all-tasks-done');
         }
@@ -44,17 +46,17 @@ appControllers.controller('MainCtrl', ['$scope', 'apiService', function($scope, 
     /////////////////////////////// COUNTDOWN
 
 
-    $scope.startTimer = function() {
+    $scope.startTimer = function(currentTask) {
+        // console.log(currentTask);
         $scope.allTasksDone = false;
-        $scope.currentTaskIndex = 0; // start from first element
-        $scope.$broadcast('timer-start', $scope.currentTaskList[$scope.currentTaskIndex]);
+        $scope.$broadcast('timer-start', currentTask);
         $scope.timerRunning = true;
     };
 
     $scope.pauseTimer = function() {
         $scope.$broadcast('timer-pause');
         $scope.timerRunning = false;
-        console.log('timer paused');
+        // console.log('timer paused');
     };
 
     $scope.$on('timer-start', function(event, task) {
@@ -74,15 +76,17 @@ appControllers.controller('MainCtrl', ['$scope', 'apiService', function($scope, 
                 }
             });
         } else {
-            $scope.totalTime = calculateTotalTime($scope.currentTaskList);
+            task.timeLeft = task.duration;
             window.countdown({
                 seconds: task.duration
             }, function(timeLeft, isFinished) {
                 task.timeLeft = timeLeft;
                 $scope.totalTime -= 1;
                 $scope.$apply();
+                console.log(timeLeft, isFinished);
                 // console.log(fromSecondsToHumanTime(timeLeft));
                 if (isFinished == true) {
+                    window.countdown.stop();
                     $scope.$broadcast('timer-done');
                 }
             });
@@ -93,7 +97,7 @@ appControllers.controller('MainCtrl', ['$scope', 'apiService', function($scope, 
         window.countdown.stop();
         $scope.isTimerPaused = true;
         $scope.timerRunning = false;
-        console.log('Timer Paused - data = ', data);
+        // console.log('Timer Paused - data = ', data);
     });
 
     $scope.$on('timer-done', function(event, data) {

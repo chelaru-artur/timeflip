@@ -29,9 +29,8 @@
     <li ng-repeat = "task in currentTaskList"> <strong> {{task.title}} : {{task.duration}}</strong></li>
   </ul>
   
-  <button ng-hide = "timerRunning" ng-click="startTimer(currentTaskList[0].duration)">Start</button>
+  <button ng-hide = "timerRunning" ng-click="startTimer(currentTaskList[0])">Start</button>
   <button ng-click="pauseTimer()">Pause</button>
-{{currentTaskIndex}}
  <div ng-show="timerRunning">
   <p>Time left: {{totalTime}} </p>
   <p>Current task #{{currentTaskIndex + 1}}/ {{currentTaskList.length}}: {{currentTaskList[currentTaskIndex].title}}  : {{currentTaskList[currentTaskIndex].timeLeft}} </p>

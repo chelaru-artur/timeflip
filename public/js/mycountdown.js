@@ -9,12 +9,12 @@ window.countdown = function (time, cb) {
         duration = duration - 1;
         // return a callback
         // time left, countdownComplete == true
-        var humanTime = duration;
-         cb(humanTime, false);
         if (duration == 0) {
             //countdown complete
             cb(0, true);
             window.clearInterval(this.timer);
+        } else {
+            cb(duration, false);
         }
     }, 1000);
 };
@@ -34,7 +34,7 @@ function convertToSeconds(time) {
     var minutes = hours > 0 ? hours * 60 : time.minutes;
     var seconds = minutes > 0 ? minutes * 60 : time.seconds;
     var ms = seconds * 1000;
-    console.log('seconds: ', seconds);
+    // console.log('seconds: ', seconds);
     return seconds;
 }
 
